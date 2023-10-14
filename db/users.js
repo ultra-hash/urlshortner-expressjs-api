@@ -12,5 +12,20 @@ module.exports = (config) => {
         return rows[0]
     }
 
-    return { getAllUsers, getUserById }
+    async function getUserByEmail(email) {
+        const [rows] = await mysqlClient.query('SELECT * FROM users WHERE email_id = ?', [email])
+        return rows[0]
+    }
+
+    async function getUserByPhoneNumber(phoneNumber) {
+        const [rows] = await mysqlClient.query('SELECT * FROM users WHERE phone_number = ?', [phoneNumber])
+        return rows[0]
+    }
+
+    async function getUserByUsername(username) {
+        const [rows] = await mysqlClient.query('SELECT * FROM users WHERE username = ?', [username])
+        return rows[0]
+    }
+
+    return { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername }
 } 
