@@ -2,7 +2,7 @@ const QueryUsers = require('../db/users')
 
 module.exports = (config) => {
 
-    const { getAllUsers, getUserById, getUserByEmail } = QueryUsers(config)
+    const { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername } = QueryUsers(config)
 
     function listUsers() {
         return getAllUsers()
@@ -15,10 +15,8 @@ module.exports = (config) => {
             return getUserByEmail(email)
         } else if (phoneNumber) {
             return getUserByPhoneNumber(phoneNumber)
-        } else if (username) {
-            return getUserByUsername(username)
         } else {
-            return "Invalid Request"
+            return getUserByUsername(username)
         }
     }
 
