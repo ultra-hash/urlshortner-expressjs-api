@@ -10,11 +10,22 @@ module.exports = (config) => {
         res.json(result)
     })
 
-    router.get("/:id", async (req, res) => {
-        const id = req.params.id
-        const result = await userDetials(id)
-        res.json(result)
+    router.get("/user-details", async (req, res) => {
+        const { id, email, phoneNumber, username } = req.query
+
+        if (
+            id && (email || username || phoneNumber) ||
+            email && (id || username || phoneNumber) ||
+            username && (id || email || phoneNumber) ||
+            phoneNumber && (id || email || username) ||
+            !id && !email && !phoneNumber && !username
+        ) {
+            res.status(400).json({ error: "Invalid Request" })
+        } else {
+            const result = await userDetials(id, email, phoneNumber, username)
+            res.json(result)
+        }
     })
 
     return router
-}
+} 
