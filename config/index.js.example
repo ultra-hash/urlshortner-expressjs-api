@@ -8,5 +8,8 @@ module.exports = {
             database: "database name"
         },
         client: null
+    },
+    shortId: {
+        length: 8, // Default length
     }
 }
