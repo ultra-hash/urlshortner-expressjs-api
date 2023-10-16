@@ -1,11 +1,21 @@
 # urlshortner-expressjs-api
 Develop URL shortener with KPI integration. Create concise links for large URLs, addressing customer needs for efficient redirection and tracking performance.
 
+ ## Features
+ - [x] generate shorturl for a longurl
+ - [x] redirect from shoturl to a longurl
+ - [x] track the details of the users ipaddress, browser, os who visited the shorturls
+ - [x] create user
+ - [ ] track changes to the user details
+ - [ ] show analytics of each url
+ - [ ] show analytics of a user's 
 
-## Initial Setup
-- rename the index.js.example file to index.js in config folder.
-- make necessary changes to the index.js file inside config folder.
-- create a database using the schema file
+
+## Setup
+> [!important]
+> - rename the index.js.example file to index.js in config folder.
+> - make necessary changes to the index.js file inside config folder.
+> - create a database using the schema file
 
 ### Install Dependencies
 - npm install
@@ -14,16 +24,18 @@ Develop URL shortener with KPI integration. Create concise links for large URLs,
 - node app.js
 
 
-## Routes
+## End Points
 Current implementation 
 
 - List all users
-  - GET /user/  
+  - `GET /user/`
 - Create new user
-  - POST /user/
-- Get user detaisl by query parameter (id, email, username, phoneNumber) 
-  - GET /user/user-details?email="testuser@test.com"
+  - `POST /user/`
+- Get user details by query parameter (id, email, username, phoneNumber) 
+  - `GET /user/user-details?email="testuser@test.com"`
 - Create shortUrl for long url
-  - POST /url/
+  - `POST /url/`
+- Redirect to LongUrl using shortUrl
+  - `GET /url/:shortUrl`
 - Get details of short url
-  - GET /url/url-details/:shortUrl
+  - `GET /url/url-details/:shortUrl`
