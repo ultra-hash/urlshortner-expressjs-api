@@ -10,10 +10,10 @@ module.exports = (config) => {
         return row[0]
     }
 
-    async function getRowByLongUrl(longUrl) {
+    async function getRowByLongUrl(userId, longUrl) {
         const [row] = await mysqlClient.query(
-            `SELECT * FROM urls WHERE long_url =  ?`,
-            [longUrl]
+            `SELECT * FROM urls WHERE user_id = ? and long_url = ?`,
+            [userId, longUrl]
         )
         return row[0]
     }
