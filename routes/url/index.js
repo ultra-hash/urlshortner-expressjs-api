@@ -1,5 +1,5 @@
 const express = require("express")
-const UrlServices = require("../../services/UrlServices")
+const UrlServices = require("../../services/urls")
 
 module.exports = (config) => {
     const router = express.Router()

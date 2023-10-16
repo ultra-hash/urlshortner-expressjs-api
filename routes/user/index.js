@@ -1,5 +1,5 @@
 const express = require("express")
-const UserServices = require("../../services/UserServices")
+const UserServices = require("../../services/users")
 
 module.exports = (config) => {
     const { userDetials, listUsers, createUser } = UserServices(config)
