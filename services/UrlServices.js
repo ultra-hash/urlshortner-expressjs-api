@@ -11,7 +11,7 @@ module.exports = (config) => {
     }
 
     async function createShortUrl(userId, longUrl) {
-        let isLongUrlExists = await getRowByLongUrl(longUrl)
+        let isLongUrlExists = await getRowByLongUrl(userId, longUrl)
 
         if (isLongUrlExists && isLongUrlExists.user_id === userId) {
             return isLongUrlExists
@@ -38,5 +38,16 @@ module.exports = (config) => {
     }
 
 
-    return { createShortUrl, generateShortId, getLongUrl }
+    async function getUrlToRedirect(shortUrl) {
+        let urlRow = await getRowByShortUrl(shortUrl)
+        if (urlRow) {
+            return { redirectTo: urlRow.long_url }
+        }
+        return {
+            error: "Url not found",
+            redirectTo: "https://www.google.com"
+        }
+    }
+
+    return { createShortUrl, generateShortId, getLongUrl, getUrlToRedirect }
 }
