@@ -63,4 +63,5 @@ CREATE TABLE IF NOT EXISTS analytics (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_url_id FOREIGN KEY (url_id) REFERENCES urls(id) ON DELETE CASCADE,
     CONSTRAINT fk_ipaddress_id FOREIGN KEY (ipaddress_id) REFERENCES ipaddresses(id) ON DELETE CASCADE
+    CONSTRAINT fk_user_agent_id FOREIGN KEY (user_agent_id) REFERENCES user_agents(id) ON DELETE CASCADE
 );
