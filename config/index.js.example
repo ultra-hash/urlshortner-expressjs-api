@@ -11,5 +11,6 @@ module.exports = {
     },
     shortId: {
         length: 8, // Default length
-    }
+    },
+    port: 3000
 }

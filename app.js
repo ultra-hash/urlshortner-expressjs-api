@@ -21,6 +21,6 @@ app.get('/', (req, res) => {
 })
 
 // start server
-app.listen(3000, () => {
-    console.info("started at localhost:3000")
+app.listen(config.port, () => {
+    console.info(`started at localhost: ${config.port}`)
 })
