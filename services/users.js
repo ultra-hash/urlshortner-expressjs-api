@@ -6,65 +6,84 @@ module.exports = (config) => {
 
     const { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername, addNewUser, updatePasswordByUsername } = QueryUsers(config)
 
-    function listUsers() {
-        return getAllUsers()
+    async function listUsers(req, res) {
+        const result = await getAllUsers()
+        res.json(result)
     }
 
-    function userDetials(id, email, phoneNumber, username) {
-        if (id) {
-            return getUserById(id)
+    async function userDetials(req, res) {
+        const { id, email, phoneNumber, username } = req.query
+        if (
+            id && (email || username || phoneNumber) ||
+            email && (id || username || phoneNumber) ||
+            username && (id || email || phoneNumber) ||
+            phoneNumber && (id || email || username) ||
+            !id && !email && !phoneNumber && !username
+        ) {
+            res.status(400).json({ error: "Invalid Request" })
+        } else if (id) {
+            res.json(await getUserById(id))
         } else if (email) {
-            return getUserByEmail(email)
+            res.json(await getUserByEmail(email))
         } else if (phoneNumber) {
-            return getUserByPhoneNumber(phoneNumber)
+            res.json(await getUserByPhoneNumber(phoneNumber))
         } else {
-            return getUserByUsername(username)
+            res.json(await getUserByUsername(username))
         }
     }
 
-    async function createUser(first_name, last_name, username, email, password, phone_number) {
-        if (await getUserByUsername(username)) {
-            return { error: "user already exist" }
-        } else if (await getUserByEmail(email)) {
-            return { error: "Email already exist" }
-        } else if (await getUserByPhoneNumber(phone_number)) {
-            return { error: "Phone number already exist" }
+    async function createUser(req, res) {
+        const { firstName, lastName, username, emailId, password, phoneNumber } = req.body
+        if (!firstName || !lastName || !username || !emailId || !password || !phoneNumber) {
+            res.status(400).json({ error: "Invalid Request" })
+        } else if (await getUserByUsername(username)) {
+            res.json({ error: "user already exist" })
+        } else if (await getUserByEmail(emailId)) {
+            res.json({ error: "Email already exist" })
+        } else if (await getUserByPhoneNumber(phoneNumber)) {
+            res.json({ error: "Phone number already exist" })
         } else {
             const hashed_password = await bcrypt.hash(password, 10)
-            return addNewUser(first_name, last_name, username, email, hashed_password, phone_number)
+            const result = await addNewUser(firstName, lastName, username, emailId, hashed_password, phoneNumber)
+            res.json(result)
         }
     }
 
-    async function login(username, password) {
+    async function login(req, res) {
+        const { username, password } = req.body
         const user = await getUserByUsername(username)
         const isPasswordValid = await bcrypt.compare(password, user.hashed_password)
         // console.log(isPasswordValid)
         if (!isPasswordValid) {
-            return { error: "User not found" }
+            res.json({ error: "User not found" })
+        } else {
+            const jwtToken = jwt.sign({ id: user.id, username }, config.JWT_SECRET)
+            res.json({ id: user.id, jwtToken })
         }
-
-        const jwtToken = jwt.sign({ id: user.id, username }, config.JWT_SECRET)
-
-        return { id: user.id, jwtToken }
     }
 
-    async function updatePassword(jwtToken, password) {
+    async function updatePassword(req, res) {
+        const { authorization } = req.headers
+        const jwtToken = authorization.split(' ')[1]
+        const { password } = req.body
         try {
             const payload = jwt.verify(jwtToken, config.JWT_SECRET)
             const hashed_password = await bcrypt.hash(password, 10)
-            return await updatePasswordByUsername(payload.username, hashed_password)
+            res.json(await updatePasswordByUsername(payload.username, hashed_password))
         } catch (e) {
-            console.error(e)
-            return { error: "Invalid token" }
+            console.error(`error : ${e.message}`)
+            res.json({ error: "Invalid token" })
         }
     }
 
-    async function verifyToken(jwtToken) {
+    async function verifyToken(req, res) {
+        const { authorization } = req.headers
+        const jwtToken = authorization.split(' ')[1]
         try {
             const payload = jwt.verify(jwtToken, config.JWT_SECRET)
-            return payload
+            res.json(payload)
         } catch (e) {
-            return { error: "Invalid Token" }
+            res.json({ error: "Invalid Token" })
         }
     }
 
