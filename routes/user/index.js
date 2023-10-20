@@ -2,7 +2,7 @@ const express = require("express")
 const UserServices = require("../../services/users")
 
 module.exports = (config) => {
-    const { userDetials, listUsers, createUser } = UserServices(config)
+    const { userDetials, listUsers, createUser, login, verifyToken, updatePassword } = UserServices(config)
     const router = express.Router()
 
     router.get("/", async (req, res) => {
@@ -37,7 +37,24 @@ module.exports = (config) => {
         }
     })
 
+    router.post('/login', async (req, res) => {
+        const { username, password } = req.body
+        res.send(await login(username, password))
+    })
 
+
+    router.post('/verifyToken', async (req, res) => {
+        const { authorization } = req.headers
+        const jwtToken = authorization.split(' ')[1]
+        res.send(await verifyToken(jwtToken))
+    })
+
+    router.post('/updatePassword', async (req, res) => {
+        const { authorization } = req.headers
+        const jwtToken = authorization.split(' ')[1]
+        const { password } = req.body
+        res.send(await updatePassword(jwtToken, password))
+    })
 
     return router
 } 
