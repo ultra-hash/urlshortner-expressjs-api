@@ -1,5 +1,3 @@
-const { hash } = require("bcrypt");
-
 module.exports = (config) => {
 
     const mysqlClient = config.mysql.client
@@ -37,5 +35,10 @@ module.exports = (config) => {
         return rows
     }
 
-    return { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername, addNewUser }
+    async function updatePasswordByUsername(username, hashed_password) {
+        const [rows] = await mysqlClient.query(`UPDATE users SET hashed_password = ? WHERE username = ?`, [hashed_password, username])
+        return rows
+    }
+
+    return { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername, addNewUser, updatePasswordByUsername }
 } 
