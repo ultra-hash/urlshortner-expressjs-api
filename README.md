@@ -11,6 +11,17 @@ Develop URL shortener with KPI integration. Create concise links for large URLs,
  - [ ] show analytics of a user's 
 
 
+## ER Diagram
+```mermaid
+erDiagram
+    users ||--|{ user_details_history: ""
+    users ||--|{ urls : ""
+    analytics }|--|| urls : ""
+    ipaddresses ||--|{ analytics : ""
+    user_agents ||--|{ analytics : ""
+```
+
+
 ## Setup
 > [!important]
 > - rename the index.js.example file to index.js in config folder.
