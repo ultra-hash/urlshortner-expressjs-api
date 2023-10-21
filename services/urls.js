@@ -1,11 +1,13 @@
 const nanoid = import("nanoid")
 const QueryUrls = require("../db/urls")
+const QueryAnalytics = require("../db/analytics")
 const AnalyticsServices = require("../services/analytics")
 
 module.exports = (config) => {
 
     const { getRowByShortUrl, getRowByLongUrl, addNewShortUrl } = QueryUrls(config)
     const { addRowToAnalytics } = AnalyticsServices(config)
+    const { getRowsByShortUrl } = QueryAnalytics(config)
 
     async function generateShortId() {
         let uniqueId = (await nanoid).nanoid(config.shortId.length)
@@ -65,5 +67,31 @@ module.exports = (config) => {
         }
     }
 
-    return { createShortUrl, generateShortId, getLongUrl, redirectTo }
+    async function getShortUrlStats(req, res) {
+        const { shortUrl } = req.params
+        try {
+            const entries = await getRowsByShortUrl(shortUrl)
+            const longUrl = entries[0].long_url
+
+            const userAgentsAndVisits = {}
+            const ipAddressAndVisits = {}
+            const activityTimeAndVisits = {}
+            for (let eachRow of entries) {
+                userAgentsAndVisits[eachRow.user_agent] ? userAgentsAndVisits[eachRow.user_agent]++ : userAgentsAndVisits[eachRow.user_agent] = 1
+                ipAddressAndVisits[eachRow.ipaddress] ? ipAddressAndVisits[eachRow.ipaddress]++ : ipAddressAndVisits[eachRow.ipaddress] = 1
+
+                const time = new Date(eachRow.created_at).getHours()
+                const nextHour = time === 23 ? 0 : time + 1
+                activityTimeAndVisits[`${time}:00 - ${nextHour}:00`] ? activityTimeAndVisits[`${time}:00 - ${nextHour}:00`]++ : activityTimeAndVisits[`${time}:00 - ${nextHour}:00`] = 1
+            }
+
+            res.json({ totalVisits: entries.length, shortUrl, longUrl, userAgentsAndVisits, ipAddressAndVisits, activityTimeAndVisits })
+        } catch (error) {
+            console.log({ error: error.message })
+            res.status(400).json({ error: 'resourse not found' })
+        }
+
+    }
+
+    return { createShortUrl, generateShortId, getLongUrl, redirectTo, getShortUrlStats }
 }
