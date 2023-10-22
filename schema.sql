@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS user_details_history (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     user_column_name VARCHAR(20) NOT NULL,
-    user_column_type VARCHAR(10) NOT NULL,
-    previous_value VARCHAR(255),
+    user_column_type VARCHAR(20) NOT NULL,
+    previous_value VARCHAR(320),
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
