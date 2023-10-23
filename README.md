@@ -7,8 +7,19 @@ Develop URL shortener with KPI integration. Create concise links for large URLs,
  - [x] track the details of the users ipaddress, browser, os who visited the shorturls
  - [x] create user
  - [ ] track changes to the user details
- - [ ] show analytics of each url
+ - [x] show analytics of each url
  - [ ] show analytics of a user's 
+
+
+## ER Diagram
+```mermaid
+erDiagram
+    users ||--|{ user_details_history: ""
+    users ||--|{ urls : ""
+    analytics }|--|| urls : ""
+    ipaddresses ||--|{ analytics : ""
+    user_agents ||--|{ analytics : ""
+```
 
 
 ## Setup
@@ -29,13 +40,116 @@ Current implementation
 
 - List all users
   - `GET /user/`
+  - response
+    ```
+    [
+     {
+       "id": 1,
+       "first_name": "John",
+       "last_name": "Doe",
+       "phone_number": 123456789,
+       "email_id": "john.doe@example.com",
+       "username": "johndoe",
+       "hashed_password": "$2b$10$9dXhFPKkslaaszaavbBvPnuLszSd74TdREgsVVUZcudZEkiapimRIFRW",
+       "created_at": "2023-09-28T18:10:48.000Z"
+     },
+     ...
+    ]
+    ```
 - Create new user
   - `POST /user/`
+  - request body
+    ```
+    {
+      "firstName": "John",
+      "lastName": "Cena",
+      "username": "johncena",
+      "emailId": "john.cena@example.com",
+      "password": "password_1",
+      "phoneNumber" : "1234567890"
+    }
+    ```
+  - response
+    ```
+    {
+      "fieldCount": 0,
+      "affectedRows": 1,
+      "insertId": 23,
+      "info": "",
+      "serverStatus": 2,
+      "warningStatus": 0,
+      "changedRows": 0
+    }
+    ```
 - Get user details by query parameter (id, email, username, phoneNumber) 
-  - `GET /user/user-details?email="testuser@test.com"`
+  - `GET /user/user-details?email="john.cena@example.com"`
+  - response
+    ```
+    {
+      "id": 23,
+      "first_name": "John",
+      "last_name": "Cena",
+      "phone_number": 1234567890,
+      "email_id": "john.cena@example.com",
+      "username": "johncena",
+      "hashed_password": "$2b$10$9dXhFPKkslaaszaavbBvPnuLszSd74TdREgsVVUZcudZEkiapimRIFRW",
+      "created_at": "2023-10-21T16:26:59.000Z"
+    }
+    ```
 - Create shortUrl for long url
   - `POST /url/`
+  - request body
+    ```
+    {
+      "userId": 23,
+      "longUrl" : "https://ultrahash.in"
+    }
+    ```
+  - response
+    ```
+    {
+      "id": 26,
+      "user_id": 22,
+      "short_url": "Z2t5c7sn",
+      "long_url": "https://ultrahash.in",
+      "created_at": "2023-10-20T10:54:04.000Z"
+    }
+    ```
 - Redirect to LongUrl using shortUrl
   - `GET /url/:shortUrl`
 - Get details of short url
   - `GET /url/url-details/:shortUrl`
+  - response
+    ```
+    {
+      "id": 26,
+      "user_id": 22,
+      "short_url": "Z2t5c7sn",
+      "long_url": "https://ultrahash.in",
+      "created_at": "2023-10-20T10:54:04.000Z"
+    }
+    ```
+- Get detailed stats of short url
+  - `GET /url/url-details/:shortUrl/stats`
+  - response
+    ```
+    {
+      "totalVisits": 6,
+      "shortUrl": "fJ7OUJTH",
+      "longUrl": "https://www.ultrahash.in",
+      "userAgentsAndVisits": {
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:x1.0) Gecko/20100101 Firefox/x01.0": 2,
+        "PostmanRuntime/7.33.0": 2,
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/2xx.21 (KHTML, like Gecko) Chrome/1xx.3.44.2 Safari/2xx.21": 2
+      },
+      "ipAddressAndVisits": {
+        "::ffff:127.0.0.1": 2,
+        "::ffff:192.168.78.112": 4
+      },
+      "activityTimeAndVisits": {
+        "18:00 - 19:00": 3,
+        "23:00 - 0:00": 1,
+        "19:00 - 20:00": 2
+      }
+    }
+    ```
