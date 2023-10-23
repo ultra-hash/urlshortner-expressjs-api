@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt')
 
 module.exports = (config) => {
 
-    const { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername, addNewUser, updatePasswordByUsername } = QueryUsers(config)
+    const { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername, addNewUser, updatePasswordByUsername, updateUserDetailsByUsername } = QueryUsers(config)
+    const { addChangeInUserDetails } = require('../db/analytics')(config)
 
     async function listUsers(req, res) {
         const result = await getAllUsers()
@@ -87,13 +88,69 @@ module.exports = (config) => {
         }
     }
 
+    async function updateUserDetails(req, res) {
+        const { authorization } = req.headers
+        const jwtToken = authorization.split(' ')[1]
+        let payload = null
+        try {
+            payload = jwt.verify(jwtToken, config.JWT_SECRET)
+        } catch (e) {
+            res.json({ error: "Invalid Token" })
+        }
+
+        let { firstName, lastName, emailId, phoneNumber } = req.body
+        const { username } = payload
+
+        const userData = await getUserByUsername(username)
+
+        const updatedColumnsData = []
+
+        if (userData.first_name !== firstName && firstName !== undefined) {
+            updatedColumnsData.push([userData.id, "first_name", "VARCHAR(50)", userData.first_name])
+        } else {
+            firstName = userData.first_name
+        }
+
+        if (userData.last_name !== lastName && lastName !== undefined) {
+            updatedColumnsData.push([userData.id, "last_name", "VARCHAR(50)", userData.last_name])
+        } else {
+            lastName = userData.last_name
+        }
+
+        if (userData.email_id !== emailId && emailId !== undefined) {
+            updatedColumnsData.push([userData.id, "email_id", "VARCHAR(320)", userData.email_id])
+        } else {
+            emailId = userData.email_id
+        }
+
+        if (userData.phone_number !== phoneNumber && phoneNumber !== undefined) {
+            updatedColumnsData.push([userData.id, "phone_number", "BIGINT", userData.phone_number])
+        } else {
+            phoneNumber = userData.phone_number
+        }
+
+        if (updatedColumnsData.length === 0) {
+            res.json({ error: "Invalid Request" })
+        } else {
+            const result = await updateUserDetailsByUsername(firstName, lastName, emailId, phoneNumber, userData.username)
+            // console.log(result)
+            // console.log(updatedColumnsData)
+            if (result.affectedRows) {
+                await addChangeInUserDetails(updatedColumnsData)
+            }
+
+            res.json({ status: "success", message: "change's have been saved" })
+        }
+    }
+
     return {
         listUsers,
         userDetials,
         createUser,
         login,
         updatePassword,
-        verifyToken
+        verifyToken,
+        updateUserDetails
     }
 
 }

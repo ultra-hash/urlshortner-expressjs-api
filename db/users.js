@@ -40,5 +40,10 @@ module.exports = (config) => {
         return rows
     }
 
-    return { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername, addNewUser, updatePasswordByUsername }
+    async function updateUserDetailsByUsername(first_name, last_name, email_id, phone_number, username) {
+        const [rows] = await mysqlClient.query(`UPDATE users SET first_name = ?, last_name = ?, email_id = ?, phone_number = ? WHERE username = ?`, [first_name, last_name, email_id, phone_number, username])
+        return rows
+    }
+
+    return { getAllUsers, getUserById, getUserByEmail, getUserByPhoneNumber, getUserByUsername, addNewUser, updatePasswordByUsername, updateUserDetailsByUsername }
 } 

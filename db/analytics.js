@@ -36,5 +36,14 @@ module.exports = (config) => {
         return rows
     }
 
-    return { getRowByIpAddress, setRowByIpaddress, getRowByUserAgent, setRowByUserAgent, addAnalytics, getRowsByShortUrl }
+    async function addChangeInUserDetails(valuesArray) {
+        const result = []
+        valuesArray.forEach(async value => {
+            const [rows] = await mysqlCient.query(`INSERT INTO user_details_history (user_id, user_column_name, user_column_type, previous_value ) VALUES (?, ?, ?, ?)`, [...value])
+            result.push(rows)
+        });
+        return result
+    }
+
+    return { getRowByIpAddress, setRowByIpaddress, getRowByUserAgent, setRowByUserAgent, addAnalytics, getRowsByShortUrl, addChangeInUserDetails }
 }
