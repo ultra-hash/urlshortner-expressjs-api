@@ -6,7 +6,7 @@ Develop URL shortener with KPI integration. Create concise links for large URLs,
  - [x] redirect from shoturl to a longurl
  - [x] track the details of the users ipaddress, browser, os who visited the shorturls
  - [x] create user
- - [ ] track changes to the user details
+ - [x] track changes to the user details
  - [x] show analytics of each url
  - [ ] show analytics of a user's 
 
