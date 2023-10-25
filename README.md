@@ -41,7 +41,7 @@ Current implementation
 - List all users
   - `GET /user/`
   - response
-    ```
+    ```json
     [
      {
        "id": 1,
@@ -59,7 +59,7 @@ Current implementation
 - Create new user
   - `POST /user/`
   - request body
-    ```
+    ```json
     {
       "firstName": "John",
       "lastName": "Cena",
@@ -70,7 +70,7 @@ Current implementation
     }
     ```
   - response
-    ```
+    ```json
     {
       "fieldCount": 0,
       "affectedRows": 1,
@@ -84,7 +84,7 @@ Current implementation
 - Get user details by query parameter (id, email, username, phoneNumber) 
   - `GET /user/user-details?email="john.cena@example.com"`
   - response
-    ```
+    ```json
     {
       "id": 23,
       "first_name": "John",
@@ -99,14 +99,14 @@ Current implementation
 - Create shortUrl for long url
   - `POST /url/`
   - request body
-    ```
+    ```json
     {
       "userId": 23,
       "longUrl" : "https://ultrahash.in"
     }
     ```
   - response
-    ```
+    ```json
     {
       "id": 26,
       "user_id": 22,
@@ -120,7 +120,7 @@ Current implementation
 - Get details of short url
   - `GET /url/url-details/:shortUrl`
   - response
-    ```
+    ```json
     {
       "id": 26,
       "user_id": 22,
@@ -132,7 +132,7 @@ Current implementation
 - Get detailed stats of short url
   - `GET /url/url-details/:shortUrl/stats`
   - response
-    ```
+    ```json
     {
       "totalVisits": 6,
       "shortUrl": "fJ7OUJTH",
