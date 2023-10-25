@@ -31,7 +31,7 @@ module.exports = (config) => {
 
             try {
                 const result = await addNewShortUrl(userId, shortId, longUrl)
-                res.json({ shortId, insertId: result.insertId })
+                res.json({ short_url: shortId, long_url: longUrl, created_at: new Date() })
             } catch (error) {
                 res.json({ error: error.message })
             }
