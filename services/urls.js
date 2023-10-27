@@ -55,15 +55,14 @@ module.exports = (config) => {
         const { shortUrl } = req.params
         const ipaddress = req.ip
         const userAgent = req.headers['user-agent']
-        await addRowToAnalytics(shortUrl, ipaddress, userAgent)
         let urlRow = await getRowByShortUrl(shortUrl)
         if (urlRow) {
+            await addRowToAnalytics(shortUrl, ipaddress, userAgent)
             // res.json({ redirectTo: urlRow.long_url })
             res.redirect(urlRow.long_url)
         } else {
             res.json({
-                error: "Url not found",
-                redirectTo: "https://www.google.com"
+                error: "Url not found"
             })
         }
     }
