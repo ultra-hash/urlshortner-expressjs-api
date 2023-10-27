@@ -2,12 +2,13 @@ const nanoid = import("nanoid")
 const QueryUrls = require("../db/urls")
 const QueryAnalytics = require("../db/analytics")
 const AnalyticsServices = require("../services/analytics")
+const jwt = require('jsonwebtoken')
 
 module.exports = (config) => {
 
-    const { getRowByShortUrl, getRowByLongUrl, addNewShortUrl } = QueryUrls(config)
+    const { getRowByShortUrl, getRowByLongUrl, addNewShortUrl, getUrlsByUsername } = QueryUrls(config)
     const { addRowToAnalytics } = AnalyticsServices(config)
-    const { getRowsByShortUrl } = QueryAnalytics(config)
+    const { getRowsByShortUrl, getUrlsByUsernameAndCount } = QueryAnalytics(config)
 
     async function generateShortId() {
         let uniqueId = (await nanoid).nanoid(config.shortId.length)
@@ -93,5 +94,35 @@ module.exports = (config) => {
 
     }
 
-    return { createShortUrl, generateShortId, getLongUrl, redirectTo, getShortUrlStats }
+    async function urlsList(req, res) {
+        const { authorization } = req.headers
+        const { stats } = req.query
+        const jwtToken = authorization.split(' ')[1]
+        const payload = jwt.verify(jwtToken, config.JWT_SECRET)
+        let result = null;
+        let formatedResult = null;
+        if (!stats) {
+            result = await getUrlsByUsername(payload.username)
+            formatedResult = result.map((url, index) => ({
+                id: index + 1,
+                shortUrl: url.short_url,
+                longUrl: url.long_url,
+                created: url.created_at
+            }))
+        } else {
+            result = await getUrlsByUsernameAndCount(payload.username)
+            formatedResult = result.map((url, index) => ({
+                id: index + 1,
+                shortUrl: url.short_url,
+                longUrl: url.long_url,
+                visited: url.count,
+                created: url.created_at
+            }))
+        }
+
+        res.json(formatedResult)
+    }
+
+
+    return { createShortUrl, generateShortId, getLongUrl, redirectTo, getShortUrlStats, urlsList }
 }

@@ -26,5 +26,10 @@ module.exports = (config) => {
         return row
     }
 
-    return { getRowByShortUrl, getRowByLongUrl, addNewShortUrl }
+    async function getUrlsByUsername(username) {
+        const [rows] = await mysqlClient.query(`SELECT * FROM urls where user_id = (SELECT id FROM users WHERE username = ?)`, [username])
+        return rows
+    }
+
+    return { getRowByShortUrl, getRowByLongUrl, addNewShortUrl, getUrlsByUsername }
 }

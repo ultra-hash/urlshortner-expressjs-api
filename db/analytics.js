@@ -45,5 +45,12 @@ module.exports = (config) => {
         return result
     }
 
-    return { getRowByIpAddress, setRowByIpaddress, getRowByUserAgent, setRowByUserAgent, addAnalytics, getRowsByShortUrl, addChangeInUserDetails }
+    async function getUrlsByUsernameAndCount(username) {
+        const [rows] = await mysqlCient.query(`SELECT short_url, long_url, count(t2.url_id) as count, t1.created_at as created_at
+        FROM (SELECT * FROM urls WHERE user_id = (SELECT id FROM users WHERE username = ?)) AS t1 LEFT JOIN analytics AS t2 ON t1.id = t2.url_id 
+        GROUP BY short_url, long_url;`, [username])
+        return rows
+    }
+
+    return { getRowByIpAddress, setRowByIpaddress, getRowByUserAgent, setRowByUserAgent, addAnalytics, getRowsByShortUrl, addChangeInUserDetails, getUrlsByUsernameAndCount }
 }
