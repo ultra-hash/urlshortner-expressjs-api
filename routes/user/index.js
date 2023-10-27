@@ -6,9 +6,9 @@ module.exports = (config) => {
     const router = express.Router()
 
     router
-        .get("/", listUsers)
-        .post("/", createUser)
-        .get("/user-details", userDetials)
+        .get("/list", listUsers)
+        .post("/create", createUser)
+        .get("/details", userDetials)
         .post('/login', login)
         .post('/verifyToken', verifyToken)
         .post('/updatePassword', updatePassword)
