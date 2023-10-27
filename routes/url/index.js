@@ -7,10 +7,10 @@ module.exports = (config) => {
     const { createShortUrl, getLongUrl, redirectTo, getShortUrlStats, urlsList } = UrlServices(config)
 
     router
-        .post("/", createShortUrl)
-        .get('/:shortUrl', redirectTo)
-        .get("/url-details/:shortUrl", getLongUrl)
-        .get('/url-details/:shortUrl/stats', getShortUrlStats)
+        .post("/create", createShortUrl)
+        .get('/redirect/:shortUrl', redirectTo)
+        .get("/details/:shortUrl", getLongUrl)
+        .get('/details/:shortUrl/stats', getShortUrlStats)
         .get('/list/', urlsList)
 
     return router
