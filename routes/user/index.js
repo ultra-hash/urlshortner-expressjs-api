@@ -1,5 +1,6 @@
 const express = require("express")
 const UserServices = require("../../services/users")
+const { verifyJwtToken } = require("../../middleware/auth")
 
 module.exports = (config) => {
     const { userDetials, listUsers, createUser, login, verifyToken, updatePassword, updateUserDetails } = UserServices(config)
@@ -10,9 +11,8 @@ module.exports = (config) => {
         .post("/create", createUser)
         .get("/details", userDetials)
         .post('/login', login)
-        .post('/verifyToken', verifyToken)
-        .post('/updatePassword', updatePassword)
-        .put('/updateUserDetails', updateUserDetails)
+        .post('/updatePassword', verifyJwtToken, updatePassword)
+        .put('/updateUserDetails', verifyJwtToken, updateUserDetails)
 
     return router
 } 

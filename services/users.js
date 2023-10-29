@@ -56,7 +56,7 @@ module.exports = (config) => {
         const isPasswordValid = await bcrypt.compare(password, user.hashed_password)
         // console.log(isPasswordValid)
         if (!isPasswordValid) {
-            res.json({ error: "User not found" })
+            res.json({ error: "Invalid Username or password" })
         } else {
             const jwtToken = jwt.sign({ id: user.id, username }, config.JWT_SECRET)
             res.json({ id: user.id, jwtToken })
@@ -64,11 +64,9 @@ module.exports = (config) => {
     }
 
     async function updatePassword(req, res) {
-        const { authorization } = req.headers
-        const jwtToken = authorization.split(' ')[1]
         const { password } = req.body
         try {
-            const payload = jwt.verify(jwtToken, config.JWT_SECRET)
+            const payload = req.payload
             const hashed_password = await bcrypt.hash(password, 10)
             res.json(await updatePasswordByUsername(payload.username, hashed_password))
         } catch (e) {
@@ -77,26 +75,8 @@ module.exports = (config) => {
         }
     }
 
-    async function verifyToken(req, res) {
-        const { authorization } = req.headers
-        const jwtToken = authorization.split(' ')[1]
-        try {
-            const payload = jwt.verify(jwtToken, config.JWT_SECRET)
-            res.json(payload)
-        } catch (e) {
-            res.json({ error: "Invalid Token" })
-        }
-    }
-
     async function updateUserDetails(req, res) {
-        const { authorization } = req.headers
-        const jwtToken = authorization.split(' ')[1]
-        let payload = null
-        try {
-            payload = jwt.verify(jwtToken, config.JWT_SECRET)
-        } catch (e) {
-            res.json({ error: "Invalid Token" })
-        }
+        const payload = req.payload
 
         let { firstName, lastName, emailId, phoneNumber } = req.body
         const { username } = payload
@@ -130,7 +110,7 @@ module.exports = (config) => {
         }
 
         if (updatedColumnsData.length === 0) {
-            res.json({ error: "Invalid Request" })
+            res.json({ error: "northing to update" })
         } else {
             const result = await updateUserDetailsByUsername(firstName, lastName, emailId, phoneNumber, userData.username)
             // console.log(result)
@@ -149,7 +129,6 @@ module.exports = (config) => {
         createUser,
         login,
         updatePassword,
-        verifyToken,
         updateUserDetails
     }
 
