@@ -9,7 +9,7 @@ module.exports = (config) => {
     async function addRowToAnalytics(shortUrl, ipaddress, userAgent) {
         const ipaddressRow = await Analytics.getRowByIpAddress(ipaddress)
         const userAgentRow = await Analytics.getRowByUserAgent(userAgent)
-        const urlRow = await Analytics.getRowByShortUrl(shortUrl)
+        const urlRow = await getRowByShortUrl(shortUrl)
 
         let ipaddressId = null
         let userAgentId = null
