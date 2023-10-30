@@ -52,5 +52,51 @@ module.exports = (config) => {
         return rows
     }
 
-    return { getRowByIpAddress, setRowByIpaddress, getRowByUserAgent, setRowByUserAgent, addAnalytics, getRowsByShortUrl, addChangeInUserDetails, getUrlsByUsernameAndCount }
+    async function countTotalUsers() {
+        const [row] = await mysqlCient.query(`SELECT count(*) AS total_users FROM users`)
+        return row
+    }
+
+    async function countNewUsersLast24Hours() {
+        const [row] = await mysqlCient.query(`SELECT count(*) AS total_users FROM users WHERE created_at between SUBDATE(now(), 1) AND now()`)
+        return row
+    }
+
+    async function countTotalUrls() {
+        const [row] = await mysqlCient.query(`SELECT count(*) AS total_urls FROM urls`)
+        return row
+    }
+
+    async function countNewUrlsLast24Hours() {
+        const [row] = await mysqlCient.query(`SELECT count(*) AS total_urls FROM urls WHERE created_at between SUBDATE(now(), 1) AND now()`)
+        return row
+    }
+
+    async function countTotalHits() {
+        const [row] = await mysqlCient.query(`SELECT count(*) AS total_hits FROM analytics`)
+        return row
+    }
+
+    async function countNewHitsLast24Hours() {
+        const [row] = await mysqlCient.query(`SELECT count(*) AS total_hits FROM analytics WHERE created_at between SUBDATE(now(), 1) AND now()`)
+        return row
+    }
+
+
+    return {
+        getRowByIpAddress,
+        setRowByIpaddress,
+        getRowByUserAgent,
+        setRowByUserAgent,
+        addAnalytics,
+        getRowsByShortUrl,
+        addChangeInUserDetails,
+        getUrlsByUsernameAndCount,
+        countTotalUsers,
+        countNewUsersLast24Hours,
+        countTotalUrls,
+        countNewUrlsLast24Hours,
+        countTotalHits,
+        countNewHitsLast24Hours
+    }
 }
