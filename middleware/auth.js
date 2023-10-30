@@ -3,8 +3,8 @@ const config = require('../config')
 
 async function verifyJwtToken(req, res, next) {
     const { authorization } = req.headers
-    const jwtToken = authorization.split(' ')[1]
     try {
+        const jwtToken = authorization.split(' ')[1]
         const payload = jwt.verify(jwtToken, config.JWT_SECRET)
         req.payload = payload
         next()

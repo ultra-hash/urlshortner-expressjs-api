@@ -38,7 +38,7 @@ module.exports = (config) => {
     async function usersCount(req, res) {
         const { Last24Hours } = req.query
 
-        let result = null
+        let rows = null
         if (Last24Hours === 'true') {
             rows = await Analytics.countNewUsersLast24Hours()
         } else {
@@ -50,7 +50,7 @@ module.exports = (config) => {
     async function urlsCount(req, res) {
         const { Last24Hours } = req.query
 
-        let result = null
+        let rows = null
         if (Last24Hours === 'true') {
             rows = await Analytics.countNewUrlsLast24Hours()
         } else {
@@ -62,7 +62,7 @@ module.exports = (config) => {
     async function hitsCount(req, res) {
         const { Last24Hours } = req.query
 
-        let result = null
+        let rows = null
         if (Last24Hours === 'true') {
             rows = await Analytics.countNewHitsLast24Hours()
         } else {

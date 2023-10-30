@@ -16,7 +16,8 @@ module.exports = (config) => {
     }
 
     async function createShortUrl(req, res) {
-        const { userId, longUrl } = req.body
+        const userId = req.payload.id
+        const { longUrl } = req.body
         let isLongUrlExists = await getRowByLongUrl(userId, longUrl)
 
         if (isLongUrlExists && isLongUrlExists.user_id === userId) {
