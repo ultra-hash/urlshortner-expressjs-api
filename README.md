@@ -162,3 +162,36 @@ Current implementation
       "created_at": "2023-10-20T10:54:04.000Z"
     }
     ```
+
+- Get total users or coutn of new users registerd in last 24 hours
+    - `GET /analytics/count/users`
+      - optional query param `Last24Hours` with value as `true` will return the number of users registered in last 24 hours 
+    - response
+      ```
+      {
+        status: "success",
+        users_count: 5
+      }
+      ``` 
+
+- Get total urls or last 24 hours count of new urls created
+    - `GET /analytics/count/urls`
+      - optional query param `Last24Hours` with value as `true` will return the number of urls created by users in last 24 hours 
+    - response
+      ```
+      {
+        status: "success",
+        urls_count: 5
+      }
+      ``` 
+
+- Get total visits or last 24 hours count of new visits to an urls
+    - `GET /analytics/count/hits`
+      - optional query param `Last24Hours` with value as `true` will return the number of urls visits registered in last 24 hours 
+    - response
+      ```
+      {
+        status: "success",
+        hits_count: 5
+      }
+      ``` 
