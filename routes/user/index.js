@@ -3,7 +3,7 @@ const UserServices = require("../../services/users")
 const { verifyJwtToken } = require("../../middleware/auth")
 
 module.exports = (config) => {
-    const { userDetials, listUsers, createUser, login, verifyToken, updatePassword, updateUserDetails } = UserServices(config)
+    const { userDetials, listUsers, createUser, login, updatePassword, updateUserDetails } = UserServices(config)
     const router = express.Router()
 
     router
