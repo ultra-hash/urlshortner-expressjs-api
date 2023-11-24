@@ -11,9 +11,9 @@ module.exports = (config) => {
     router
         .post("/create", verifyJwtToken, createShortUrl)
         .get('/redirect/:shortUrl', redirectTo)
-        .get("/details/:shortUrl", getLongUrl)
-        .get('/details/:shortUrl/stats', getShortUrlStats)
-        .get('/list/', urlsList)
+        .get("/details/:shortUrl", verifyJwtToken, getLongUrl)
+        .get('/details/:shortUrl/stats', verifyJwtToken, getShortUrlStats)
+        .get('/list/', verifyJwtToken, urlsList)
 
     return router
 }

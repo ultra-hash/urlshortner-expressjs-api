@@ -2,7 +2,6 @@ const nanoid = import("nanoid")
 const QueryUrls = require("../db/urls")
 const QueryAnalytics = require("../db/analytics")
 const AnalyticsServices = require("../services/analytics")
-const jwt = require('jsonwebtoken')
 
 module.exports = (config) => {
 
@@ -95,10 +94,8 @@ module.exports = (config) => {
     }
 
     async function urlsList(req, res) {
-        const { authorization } = req.headers
         const { stats } = req.query
-        const jwtToken = authorization.split(' ')[1]
-        const payload = jwt.verify(jwtToken, config.JWT_SECRET)
+        const payload = req.payload
         let result = null;
         let formatedResult = null;
         if (!stats) {
