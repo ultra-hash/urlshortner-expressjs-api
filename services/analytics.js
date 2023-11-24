@@ -15,14 +15,14 @@ module.exports = (config) => {
         let userAgentId = null
         let urlId = urlRow.id
 
-        if (ipaddressRow) {
+        if (Object.keys(ipaddressRow).length) {
             ipaddressId = ipaddressRow.id
         } else {
             const result = await Analytics.setRowByIpaddress(ipaddress)
             ipaddressId = result.insertId
         }
 
-        if (userAgentRow) {
+        if (Object.keys(userAgentRow).length) {
             userAgentId = userAgentRow.id
         } else {
             const result = await Analytics.setRowByUserAgent(userAgent)
@@ -39,36 +39,53 @@ module.exports = (config) => {
         const { Last24Hours } = req.query
 
         let rows = null
-        if (Last24Hours === 'true') {
-            rows = await Analytics.countNewUsersLast24Hours()
-        } else {
-            rows = await Analytics.countTotalUsers()
+        try {
+            if (Last24Hours === 'true') {
+                rows = await Analytics.countNewUsersLast24Hours()
+            } else {
+                rows = await Analytics.countTotalUsers()
+            }
+            res.json({ status: "success", ...rows[0] })
+
+        } catch (error) {
+            console.log(`Error: ${error.message}`)
+            return res.status(500).json({ error: "Internal server error" })
         }
-        res.json({ status: "success", ...rows[0] })
     }
 
     async function urlsCount(req, res) {
         const { Last24Hours } = req.query
 
         let rows = null
-        if (Last24Hours === 'true') {
-            rows = await Analytics.countNewUrlsLast24Hours()
-        } else {
-            rows = await Analytics.countTotalUrls()
+        try {
+            if (Last24Hours === 'true') {
+                rows = await Analytics.countNewUrlsLast24Hours()
+            } else {
+                rows = await Analytics.countTotalUrls()
+            }
+            res.json({ status: "success", ...rows[0] })
+        } catch (error) {
+            console.log(`Error: ${error.message}`)
+            return res.status(500).json({ error: "Internal server error" })
         }
-        res.json({ status: "success", ...rows[0] })
     }
 
     async function hitsCount(req, res) {
         const { Last24Hours } = req.query
 
         let rows = null
-        if (Last24Hours === 'true') {
-            rows = await Analytics.countNewHitsLast24Hours()
-        } else {
-            rows = await Analytics.countTotalHits()
+        try {
+
+            if (Last24Hours === 'true') {
+                rows = await Analytics.countNewHitsLast24Hours()
+            } else {
+                rows = await Analytics.countTotalHits()
+            }
+            res.json({ status: "success", ...rows[0] })
+        } catch (error) {
+            console.log(`Error: ${error.message}`)
+            return res.status(500).json({ error: "Internal server error" })
         }
-        res.json({ status: "success", ...rows[0] })
     }
 
     return { addRowToAnalytics, usersCount, urlsCount, hitsCount }

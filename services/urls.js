@@ -17,36 +17,43 @@ module.exports = (config) => {
     async function createShortUrl(req, res) {
         const userId = req.payload.id
         const { longUrl } = req.body
-        let isLongUrlExists = await getRowByLongUrl(userId, longUrl)
+        try {
 
-        if (isLongUrlExists && isLongUrlExists.user_id === userId) {
-            res.json(isLongUrlExists)
-        } else {
-            let shortId = await generateShortId()
-            let existingId = await getRowByShortUrl(shortId)
+            let isLongUrlExists = await getRowByLongUrl(userId, longUrl)
 
-            while (existingId != undefined || null || false) {
-                shortId = await generateShortId()
-                existingId = await getRowByShortUrl(shortId)
-            }
+            if (isLongUrlExists && isLongUrlExists.user_id === userId) {
+                res.json(isLongUrlExists)
+            } else {
+                let shortId = await generateShortId()
+                let existingId = await getRowByShortUrl(shortId)
 
-            try {
-                const result = await addNewShortUrl(userId, shortId, longUrl)
+                while (existingId != undefined || null || false) {
+                    shortId = await generateShortId()
+                    existingId = await getRowByShortUrl(shortId)
+                }
+
+                await addNewShortUrl(userId, shortId, longUrl)
                 res.json({ short_url: shortId, long_url: longUrl, created_at: new Date() })
-            } catch (error) {
-                res.json({ error: error.message })
             }
-        }
 
+        } catch (error) {
+            console.log(`Error: ${error.message}`)
+            return res.status(500).json({ error: "Internal server error" })
+        }
     }
 
     async function getLongUrl(req, res) {
         const { shortUrl } = req.params
-        let urlRow = await getRowByShortUrl(shortUrl)
-        if (urlRow) {
-            res.json(urlRow)
-        } else {
-            res.json({ error: "Url not found" })
+        try {
+            let urlRow = await getRowByShortUrl(shortUrl)
+            if (urlRow) {
+                res.json(urlRow)
+            } else {
+                res.json({ error: "Url not found" })
+            }
+        } catch (error) {
+            console.log(`Error: ${error.message}`)
+            return res.status(500).json({ error: "Internal server error" })
         }
     }
 
@@ -55,15 +62,21 @@ module.exports = (config) => {
         const { shortUrl } = req.params
         const ipaddress = req.ip
         const userAgent = req.headers['user-agent']
-        let urlRow = await getRowByShortUrl(shortUrl)
-        if (urlRow) {
-            await addRowToAnalytics(shortUrl, ipaddress, userAgent)
-            // res.json({ redirectTo: urlRow.long_url })
-            res.redirect(urlRow.long_url)
-        } else {
-            res.json({
-                error: "Url not found"
-            })
+        try {
+
+            let urlRow = await getRowByShortUrl(shortUrl)
+            if (urlRow) {
+                await addRowToAnalytics(shortUrl, ipaddress, userAgent)
+                // res.json({ redirectTo: urlRow.long_url })
+                res.redirect(urlRow.long_url)
+            } else {
+                res.json({
+                    error: "Url not found"
+                })
+            }
+        } catch (error) {
+            console.log(`Error: ${error.message}`)
+            return res.status(500).json({ error: "Internal server error" })
         }
     }
 
@@ -71,6 +84,12 @@ module.exports = (config) => {
         const { shortUrl } = req.params
         try {
             const entries = await getRowsByShortUrl(shortUrl)
+
+            if (!entries.length) {
+                console.log(entries)
+                return res.status(400).json({ error: 'resourse not found' })
+            }
+
             const longUrl = entries[0].long_url
 
             const userAgentsAndVisits = {}
@@ -87,8 +106,8 @@ module.exports = (config) => {
 
             res.json({ totalVisits: entries.length, shortUrl, longUrl, userAgentsAndVisits, ipAddressAndVisits, activityTimeAndVisits })
         } catch (error) {
-            console.log({ error: error.message })
-            res.status(400).json({ error: 'resourse not found' })
+            console.log(`Error: ${error.message}`)
+            return res.status(500).json({ error: "Internal server error" })
         }
 
     }
@@ -99,22 +118,32 @@ module.exports = (config) => {
         let result = null;
         let formatedResult = null;
         if (!stats) {
-            result = await getUrlsByUsername(payload.username)
-            formatedResult = result.map((url, index) => ({
-                id: index + 1,
-                shortUrl: url.short_url,
-                longUrl: url.long_url,
-                created: url.created_at
-            }))
+            try {
+                result = await getUrlsByUsername(payload.username)
+                formatedResult = result.map((url, index) => ({
+                    id: index + 1,
+                    shortUrl: url.short_url,
+                    longUrl: url.long_url,
+                    created: url.created_at
+                }))
+            } catch (error) {
+                console.log(`Error: ${error.message}`)
+                return res.status(500).json({ error: "Internal server error" })
+            }
         } else {
-            result = await getUrlsByUsernameAndCount(payload.username)
-            formatedResult = result.map((url, index) => ({
-                id: index + 1,
-                shortUrl: url.short_url,
-                longUrl: url.long_url,
-                visited: url.count,
-                created: url.created_at
-            }))
+            try {
+                result = await getUrlsByUsernameAndCount(payload.username)
+                formatedResult = result.map((url, index) => ({
+                    id: index + 1,
+                    shortUrl: url.short_url,
+                    longUrl: url.long_url,
+                    visited: url.count,
+                    created: url.created_at
+                }))
+            } catch (error) {
+                console.log(`Error: ${error.message}`)
+                return res.status(500).json({ error: "Internal server error" })
+            }
         }
 
         res.json(formatedResult)
