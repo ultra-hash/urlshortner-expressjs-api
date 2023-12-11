@@ -40,10 +40,12 @@ erDiagram
 - node app.js
 
 ### Sample Front End
+
 > [!note]
 > Example frontend based on this api : [React urlshortner Frontend](https://github.com/ultra-hash/ulrshortner-frontend)
 
 > [!important]
+>
 > # Docs
 
 ## Get Detailed Stats of Short URL
@@ -84,6 +86,7 @@ Retrieves detailed statistics for a given short URL.
   }
 }
 ```
+
 #### Response Details
 
 - `totalVisits`: The total number of visits to the short URL.
@@ -94,14 +97,17 @@ Retrieves detailed statistics for a given short URL.
 - `activityTimeAndVisits`: A mapping of time ranges to the number of visits during each range.
 
 #### Example
+
 ```bash
 curl -X GET https://api.example.com/url/details/fJ7OUJTH/stats
 ```
+
 </details>
 
 ## List All Users
 
 Retrieves a list of all users.
+
 <details>
     <summary>show docs</summary>
 
@@ -126,6 +132,7 @@ Retrieves a list of all users.
   ...
 ]
 ```
+
 #### Response Details
 
 - `id`: The unique identifier for the user.
@@ -138,9 +145,11 @@ Retrieves a list of all users.
 - `created_at`: The timestamp when the user account was created.
 
 #### Example
+
 ```bash
 curl -X GET https://api.example.com/user/list
 ```
+
 </details>
 
 ## Create New User
@@ -166,6 +175,7 @@ Creates a new user.
   "phoneNumber": "1234567890"
 }
 ```
+
 #### Request Parameters
 
 - `firstName (string)`: The first name of the new user.
@@ -176,6 +186,7 @@ Creates a new user.
 - `phoneNumber (string)`: The phone number of the new user.
 
 #### Response
+
 ```json
 {
   "fieldCount": 0,
@@ -199,6 +210,7 @@ Creates a new user.
 - `changedRows`: The number of changed rows.
 
 #### Example
+
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
   "firstName": "John",
@@ -209,6 +221,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
   "phoneNumber": "1234567890"
 }' https://api.example.com/user/create
 ```
+
 </details>
 
 ## Get User Details by Query Parameter
@@ -230,6 +243,7 @@ Retrieves user details based on any one of the specified query parameters (id, e
 - `phoneNumber` (string): The phone number of the user.
 
 #### Response
+
 ```json
 {
   "id": 23,
@@ -255,6 +269,7 @@ Retrieves user details based on any one of the specified query parameters (id, e
 - `created_at`: The timestamp when the user account was created.
 
 #### Exmaple Request
+
 ```bash
 # Get User Deatils by email address
 curl -X GET "https://api.example.com/user/details?email=john.cena@example.com"
@@ -262,8 +277,8 @@ curl -X GET "https://api.example.com/user/details?email=john.cena@example.com"
 # Get User Details by phone number
 curl -X GET "https://api.example.com/user/details?phoneNumber=1234567890"
 ```
-</details>
 
+</details>
 
 ## Create Short URL for Long URL
 
@@ -271,7 +286,6 @@ Creates a short URL for a given long URL.
 
 <details>
     <summary>Show docs</summary>
-
 
 ### Endpoint
 
@@ -285,12 +299,14 @@ Creates a short URL for a given long URL.
   "longUrl": "https://ultrahash.in"
 }
 ```
+
 #### Request Parameters
 
 - userId (number): The user ID associated with the short URL.
 - longUrl (string): The long URL for which a short URL is to be created.
 
 #### Response
+
 ```json
 {
   "id": 26,
@@ -300,6 +316,7 @@ Creates a short URL for a given long URL.
   "created_at": "2023-10-20T10:54:04.000Z"
 }
 ```
+
 #### Response Details
 
 - `id (number)`: The unique identifier for the short URL.
@@ -309,12 +326,14 @@ Creates a short URL for a given long URL.
 - `created_at (string)`: The timestamp when the short URL was created.
 
 #### Example
+
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
   "userId": 23,
   "longUrl": "https://ultrahash.in"
 }' https://api.example.com/url/create
 ```
+
 </details>
 
 ## Redirect to Long URL using Short URL
@@ -337,14 +356,15 @@ Redirects to the long URL associated with the provided short URL.
 ```bash
 curl -L https://api.example.com/url/redirect/Z2t5c7sn
 ```
+
 </details>
 
 ## Get Details of Short URL
 
 Retrieves details of a short URL.
+
 <details>
     <summary>Show docs</summary>
-
 
 ### Endpoint
 
@@ -361,6 +381,7 @@ curl -X GET https://api.example.com/url/details/Z2t5c7sn
 ```
 
 #### Response
+
 ```json{
   "id": 26,
   "user_id": 22,
@@ -404,7 +425,8 @@ curl -X GET https://api.example.com/analytics/count/users
 curl -X GET https://api.example.com/analytics/count/users?Last24Hours=true
 ```
 
-#### Response 
+#### Response
+
 ```json{
   "status": "success",
   "users_count": 5
@@ -420,6 +442,7 @@ curl -X GET https://api.example.com/analytics/count/users?Last24Hours=true
 ## Get Total URLs or Count of New URLs Created
 
 Retrieves the total number of URLs or the count of new URLs created in the last 24 hours.
+
 <details>
     <summary>show docs</summary>
 
@@ -449,6 +472,7 @@ curl -X GET https://api.example.com/analytics/count/urls?Last24Hours=true
   "urls_count": 5
 }
 ```
+
 #### Response Details
 
 - `status (string)`: Indicates the status of the request ("success" in this case).
@@ -494,5 +518,58 @@ curl -X GET https://api.example.com/analytics/count/hits?Last24Hours=true
 - `status (string)`: Indicates the status of the request ("success" in this case).
 - `hits_count (number)`: The total number of visits or the count of new visits to URLs in the last 24 hours.
 
-    
 </details>
+
+###
+
+# Error Code's & Message's
+
+### General Errors
+
+| checks to perform                  | status code                 | error message         |
+| ---------------------------------- | --------------------------- | --------------------- |
+| improper json body                 | 400 - bad request           | bad json format       |
+| something broke intracting with db | 500 - Internel server error | Internal Server error |
+
+### jwtToken
+
+| checks to perform                  | status code                | error message       |
+| ---------------------------------- | -------------------------- | ------------------- |
+| if jwtToken not present in headers | 401 - unauthorized request | jwt Token required  |
+| if jwtToken not valid              | 401 - unauthozied request  | jwt Token not Valid |
+| if jwtToken expired                | 400 - bad request          | jwt Token expired   |
+
+### Register User
+
+| checks to perform             | status code       | error message               |
+| ----------------------------- | ----------------- | --------------------------- |
+| if username already exists    | 400 - bad request | user already exists         |
+| if email already exists       | 400 - bad request | email already exists        |
+| if phonenumber already exists | 400 - bad request | phone number already exists |
+
+### Login User
+
+| checks to perform               | status code       | error message                       |
+| ------------------------------- | ----------------- | ----------------------------------- |
+| if username and password matchs | 400 - bad request | username and password doesn't match |
+| if username exists              | 400 - bad request | username dosn't exists              |
+
+### Create Short Url
+
+| checks to perform             | status code       | error message               |
+| ----------------------------- | ----------------- | --------------------------- |
+| if url not valid              | 400 - bad request | invalid long url            |
+| if phonenumber already exists | 400 - bad request | phone number already exists |
+
+### Redirect Short Url
+
+| checks to perform           | status code              | error message         |
+| --------------------------- | ------------------------ | --------------------- |
+| if short url doesn't exists | 404 - resource not found | short url dont exists |
+
+### Details of Short Url & Stats of short url
+
+| checks to perform                    | status code              | error message                             |
+| ------------------------------------ | ------------------------ | ----------------------------------------- |
+| if short url doesn't exists          | 404 - resource not found | short url dont exists                     |
+| if short url belongs to other user's | 403 - Forbidden reqeust  | access to requested resource is forbidden |
