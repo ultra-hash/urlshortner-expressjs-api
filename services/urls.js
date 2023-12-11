@@ -2,6 +2,7 @@ const nanoid = import("nanoid")
 const QueryUrls = require("../db/urls")
 const QueryAnalytics = require("../db/analytics")
 const AnalyticsServices = require("../services/analytics")
+const url = require('node:url')
 
 module.exports = (config) => {
 
@@ -17,6 +18,12 @@ module.exports = (config) => {
     async function createShortUrl(req, res) {
         const userId = req.payload.id
         const { longUrl } = req.body
+
+        let newUrl = url.parse(longUrl)
+
+        if (newUrl.protocol === null || !["http:", "https:"].includes(newUrl.protocol.toLowerCase()))
+            return res.status(400).json({ error: "protocal has to be http:// or https://" })
+
         try {
 
             let isLongUrlExists = await getRowByLongUrl(userId, longUrl)
