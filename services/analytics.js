@@ -1,92 +1,92 @@
-const AnalyticsQuery = require('../db/analytics')
-const UrlsQuery = require('../db/urls')
+const AnalyticsQuery = require("../db/analytics");
+const UrlsQuery = require("../db/urls");
 
 module.exports = (config) => {
+  const Analytics = AnalyticsQuery(config);
+  const { getRowByShortUrl } = UrlsQuery(config);
 
-    const Analytics = AnalyticsQuery(config)
-    const { getRowByShortUrl } = UrlsQuery(config)
+  async function addRowToAnalytics(shortUrl, ipaddress, userAgent) {
+    const ipaddressRow = await Analytics.getRowByIpAddress(ipaddress);
+    const userAgentRow = await Analytics.getRowByUserAgent(userAgent);
+    const urlRow = await getRowByShortUrl(shortUrl);
 
-    async function addRowToAnalytics(shortUrl, ipaddress, userAgent) {
-        const ipaddressRow = await Analytics.getRowByIpAddress(ipaddress)
-        const userAgentRow = await Analytics.getRowByUserAgent(userAgent)
-        const urlRow = await getRowByShortUrl(shortUrl)
+    let ipaddressId = null;
+    let userAgentId = null;
+    let urlId = urlRow.id;
 
-        let ipaddressId = null
-        let userAgentId = null
-        let urlId = urlRow.id
-
-        if (Object.keys(ipaddressRow).length) {
-            ipaddressId = ipaddressRow.id
-        } else {
-            const result = await Analytics.setRowByIpaddress(ipaddress)
-            ipaddressId = result.insertId
-        }
-
-        if (Object.keys(userAgentRow).length) {
-            userAgentId = userAgentRow.id
-        } else {
-            const result = await Analytics.setRowByUserAgent(userAgent)
-            userAgentId = result.insertId
-        }
-
-        const result = await Analytics.addAnalytics(urlId, ipaddressId, userAgentId)
-
-        return result
+    if (Object.keys(ipaddressRow).length) {
+      ipaddressId = ipaddressRow.id;
+    } else {
+      const result = await Analytics.setRowByIpaddress(ipaddress);
+      ipaddressId = result.insertId;
     }
 
-
-    async function usersCount(req, res) {
-        const { Last24Hours } = req.query
-
-        let rows = null
-        try {
-            if (Last24Hours === 'true') {
-                rows = await Analytics.countNewUsersLast24Hours()
-            } else {
-                rows = await Analytics.countTotalUsers()
-            }
-            res.json({ status: "success", ...rows[0] })
-
-        } catch (error) {
-            console.log(`Error: ${error.message}`)
-            return res.status(500).json({ error: "Internal server error" })
-        }
+    if (Object.keys(userAgentRow).length) {
+      userAgentId = userAgentRow.id;
+    } else {
+      const result = await Analytics.setRowByUserAgent(userAgent);
+      userAgentId = result.insertId;
     }
 
-    async function urlsCount(req, res) {
-        const { Last24Hours } = req.query
+    const result = await Analytics.addAnalytics(
+      urlId,
+      ipaddressId,
+      userAgentId
+    );
 
-        let rows = null
-        try {
-            if (Last24Hours === 'true') {
-                rows = await Analytics.countNewUrlsLast24Hours()
-            } else {
-                rows = await Analytics.countTotalUrls()
-            }
-            res.json({ status: "success", ...rows[0] })
-        } catch (error) {
-            console.log(`Error: ${error.message}`)
-            return res.status(500).json({ error: "Internal server error" })
-        }
+    return result;
+  }
+
+  async function usersCount(req, res) {
+    const { Last24Hours } = req.query;
+
+    let rows = null;
+    try {
+      if (Last24Hours === "true") {
+        rows = await Analytics.countNewUsersLast24Hours();
+      } else {
+        rows = await Analytics.countTotalUsers();
+      }
+      res.json({ status: "success", ...rows[0] });
+    } catch (error) {
+      console.log(`Error: ${error.message}`);
+      return res.status(500).json({ error: "Internal server error" });
     }
+  }
 
-    async function hitsCount(req, res) {
-        const { Last24Hours } = req.query
+  async function urlsCount(req, res) {
+    const { Last24Hours } = req.query;
 
-        let rows = null
-        try {
-
-            if (Last24Hours === 'true') {
-                rows = await Analytics.countNewHitsLast24Hours()
-            } else {
-                rows = await Analytics.countTotalHits()
-            }
-            res.json({ status: "success", ...rows[0] })
-        } catch (error) {
-            console.log(`Error: ${error.message}`)
-            return res.status(500).json({ error: "Internal server error" })
-        }
+    let rows = null;
+    try {
+      if (Last24Hours === "true") {
+        rows = await Analytics.countNewUrlsLast24Hours();
+      } else {
+        rows = await Analytics.countTotalUrls();
+      }
+      res.json({ status: "success", ...rows[0] });
+    } catch (error) {
+      console.log(`Error: ${error.message}`);
+      return res.status(500).json({ error: "Internal server error" });
     }
+  }
 
-    return { addRowToAnalytics, usersCount, urlsCount, hitsCount }
-}
+  async function hitsCount(req, res) {
+    const { Last24Hours } = req.query;
+
+    let rows = null;
+    try {
+      if (Last24Hours === "true") {
+        rows = await Analytics.countNewHitsLast24Hours();
+      } else {
+        rows = await Analytics.countTotalHits();
+      }
+      res.json({ status: "success", ...rows[0] });
+    } catch (error) {
+      console.log(`Error: ${error.message}`);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  return { addRowToAnalytics, usersCount, urlsCount, hitsCount };
+};
