@@ -132,3 +132,6 @@ dist
 
 # DATABASES
 *.db
+
+# project config file
+config/index.js
