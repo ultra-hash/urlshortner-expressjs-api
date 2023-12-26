@@ -48,7 +48,7 @@ erDiagram
 >
 > # Docs
 
-- ## Get Detailed Stats of Short URL
+- ### Get Detailed Stats of Short URL
 
   Retrieves detailed statistics for a given short URL.
 
@@ -104,7 +104,7 @@ erDiagram
 
   </details>
 
-- ## List All Users
+- ### List All Users
 
   Retrieves a list of all users.
 
@@ -152,7 +152,7 @@ erDiagram
 
   </details>
 
-- ## Create New User
+- ### Create New User
 
   Creates a new user.
 
@@ -224,7 +224,7 @@ erDiagram
 
   </details>
 
-- ## Get User Details by Query Parameter
+- ### Get User Details by Query Parameter
 
   Retrieves user details based on any one of the specified query parameters (id, email, username, phoneNumber).
 
@@ -280,7 +280,7 @@ erDiagram
 
   </details>
 
-- ## Create Short URL for Long URL
+- ### Create Short URL for Long URL
 
   Creates a short URL for a given long URL.
 
@@ -336,7 +336,7 @@ erDiagram
 
   </details>
 
-- ## Redirect to Long URL using Short URL
+- ### Redirect to Long URL using Short URL
 
   Redirects to the long URL associated with the provided short URL.
 
@@ -359,7 +359,7 @@ erDiagram
 
   </details>
 
-- ## Get Details of Short URL
+- ### Get Details of Short URL
 
   Retrieves details of a short URL.
 
@@ -382,7 +382,8 @@ erDiagram
 
   #### Response
 
-  ```json{
+  ```json
+  {
     "id": 26,
     "user_id": 22,
     "short_url": "Z2t5c7sn",
@@ -400,7 +401,7 @@ erDiagram
   - `created_at (string)`: The timestamp when the short URL was created.
   </details>
 
-- ## Get Total Users or Count of New Users Registered
+- ### Get Total Users or Count of New Users Registered
 
   Retrieves the total number of users or the count of new users registered in the last 24 hours.
 
@@ -427,7 +428,8 @@ erDiagram
 
   #### Response
 
-  ```json{
+  ```json
+  {
     "status": "success",
     "users_count": 5
   }
@@ -439,7 +441,7 @@ erDiagram
   - `users_count (number)`: The total number of users or the count of new users registered in the last 24 hours.
   </details>
 
-- ## Get Total URLs or Count of New URLs Created
+- ### Get Total URLs or Count of New URLs Created
 
   Retrieves the total number of URLs or the count of new URLs created in the last 24 hours.
 
@@ -479,7 +481,7 @@ erDiagram
   - `urls_count (number)`: The total number of URLs or the count of new URLs created in the last 24 hours.
   </details>
 
-- ## Get Total Visits or Count of New Visits to URLs
+- ### Get Total Visits or Count of New Visits to URLs
 
   Retrieves the total number of visits or the count of new visits to URLs in the last 24 hours.
 
