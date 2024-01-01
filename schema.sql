@@ -1,4 +1,4 @@
-CREATE DATABASE short_url_db;
+CREATE DATABASE IF NOT EXISTS short_url_db;
 USE short_url_db;
 
 
