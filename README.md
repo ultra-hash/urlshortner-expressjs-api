@@ -2,6 +2,30 @@
 
 Develop URL shortener with KPI integration. Create concise links for large URLs, addressing customer needs for efficient redirection and tracking performance.
 
+### Building and running the application
+
+> [!important]
+>
+> - rename the .env.example file to .env in config folder.
+> - make necessary changes to the .env file.
+
+- ## contianerize using docker
+
+  When you're ready, start your application by running:
+  `docker compose up -d --build`.
+
+- ## manual setup
+
+  Install Dependencies
+
+  - npm install
+
+  Start Server
+
+  - node app.js
+
+Your application will be available at http://localhost:3000.
+
 ## Features
 
 - [x] generate shorturl for a longurl
@@ -22,22 +46,6 @@ erDiagram
     ipaddresses ||--|{ analytics : ""
     user_agents ||--|{ analytics : ""
 ```
-
-## Setup
-
-> [!important]
->
-> - rename the index.js.example file to index.js in config folder.
-> - make necessary changes to the index.js file inside config folder.
-> - create a database using the schema file
-
-### Install Dependencies
-
-- npm install
-
-### Start Server
-
-- node app.js
 
 ### Sample Front End
 
