@@ -9,20 +9,30 @@ Develop URL shortener with KPI integration. Create concise links for large URLs,
 > - rename the .env.example file to .env in config folder.
 > - make necessary changes to the .env file.
 
-- ## contianerize using docker
+- ## Containerize using Docker
 
   When you're ready, start your application by running:
   `docker compose up -d --build`.
 
-- ## manual setup
+- ## Manual Setup
+
+  Setting up database tables in MySQL by executing `schema.sql` script againt your MySQL server
+
+  - ```bash
+    mysql -u <db_username> -p <db_password> < schema.sql
+    ```
 
   Install Dependencies
 
-  - npm install
+  - ```bash
+    npm install
+    ```
 
   Start Server
 
-  - node app.js
+  - ```bash
+    node app.js
+    ```
 
 Your application will be available at http://localhost:3000.
 
