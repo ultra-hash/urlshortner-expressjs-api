@@ -46,7 +46,7 @@ Your application will be available at http://localhost:3000.
 - [x] show analytics of each url
 - [ ] show analytics of a user's
 
-## ER Diagram
+## Entiy Relation Diagram
 
 ```mermaid
 erDiagram
