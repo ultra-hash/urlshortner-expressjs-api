@@ -19,7 +19,7 @@ Develop URL shortener with KPI integration. Create concise links for large URLs,
   Setting up database tables in MySQL by executing `schema.sql` script againt your MySQL server
 
   - ```bash
-    mysql -u <db_username> -p <db_password> < schema.sql
+    mysql -u {db_username} -p {db_password} < schema.sql
     ```
 
   Install Dependencies
