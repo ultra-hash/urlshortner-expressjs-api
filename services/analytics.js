@@ -14,14 +14,14 @@ module.exports = (config) => {
     let userAgentId = null;
     let urlId = urlRow.id;
 
-    if (Object.keys(ipaddressRow).length) {
+    if (ipaddressRow) {
       ipaddressId = ipaddressRow.id;
     } else {
       const result = await Analytics.setRowByIpaddress(ipaddress);
       ipaddressId = result.insertId;
     }
 
-    if (Object.keys(userAgentRow).length) {
+    if (userAgentRow) {
       userAgentId = userAgentRow.id;
     } else {
       const result = await Analytics.setRowByUserAgent(userAgent);
