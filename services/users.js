@@ -92,6 +92,12 @@ module.exports = (config) => {
     const { username, password } = req.body;
     try {
       const user = await getUserByUsername(username);
+      // console.log(user);
+
+      if (!user) {
+        return res.json({ error: "user not found" });
+      }
+
       const isPasswordValid = await bcrypt.compare(
         password,
         user.hashed_password
