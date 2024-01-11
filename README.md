@@ -363,7 +363,7 @@ erDiagram
 
   ### Endpoint
 
-  - `GET /url/redirect/:shortUrl`
+  - `GET /:shortUrl`
 
   #### Path Parameter
 
@@ -372,7 +372,7 @@ erDiagram
   #### Example Request
 
   ```bash
-  curl -L https://api.example.com/url/redirect/Z2t5c7sn
+  curl -L https://api.example.com/Z2t5c7sn
   ```
 
   </details>
