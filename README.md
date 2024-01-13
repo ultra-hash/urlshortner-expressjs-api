@@ -2,6 +2,10 @@
 
 Develop URL shortener with KPI integration. Create concise links for large URLs, addressing customer needs for efficient redirection and tracking performance.
 
+## load test performace using k6 with 3000 virtual users for 10 mins
+
+![k6 load test result](./3000vus-10m-server-aws-ec2-t2.micro-docker-container-database-rds-t3.micro.png)
+
 ### Building and running the application
 
 > [!important]
